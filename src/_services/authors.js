@@ -1,4 +1,4 @@
-import API from "../_api";
+import { API } from "../_api";
 
 export const getAuthors = async () => {
   const {data} = await API.get("/authors")
@@ -32,7 +32,7 @@ export const updateAuthor = async (id,data) => {
     return response.data
   }catch (error){
     console.log(error);
-    throw error
+    throw error;
   }
 }
 

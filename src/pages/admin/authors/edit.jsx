@@ -15,7 +15,8 @@ export default function AuthorEdit() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const authorsData = await showAuthor(id);
+      const authorsData = await 
+        showAuthor(id);
 
       setFormData({
         name: authorsData.name,

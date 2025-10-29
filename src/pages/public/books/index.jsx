@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getBooks } from "../../../_services/books";
+import { bookImageStorage } from "../../../_api";
 
 export default function Books() {
   const [books, setBooks] = useState([]);
@@ -26,22 +27,17 @@ export default function Books() {
                   className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
                 >
                   <div className="h-56 w-full">
-                    <Link to="#">
+                    <Link to={`/books/show/${book.id}`}>
                       <img
-                        className="mx-auto h-full dark:hidden"
-                        src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"
-                        alt=""
-                      />
-                      <img
-                        className="mx-auto hidden h-full dark:block"
-                        src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg"
+                        className="mx-auto h-full "
+                        src={`${bookImageStorage}/${book.cover_photo}`}
                         alt=""
                       />
                     </Link>
                   </div>
                   <div className="pt-6">
                     <Link
-                      to={`/books/show/${book.id}`}
+                      to=""
                       className="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white"
                     >
                       {book.title}

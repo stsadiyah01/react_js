@@ -1,6 +1,19 @@
 import { useJwt } from "react-jwt";
 import  { API } from "../_api";
 
+API.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userInfo');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+
 export const login = async ({ email,password }) => {
   try{
     const { data } = await API.post('/login',{email,password})
@@ -20,20 +33,22 @@ export const register = async ({ name,email,username,password }) => {
   }
 }
 
-export const logout = async ({ token }) => {
-  try{
-    const { data } = await API.post('/logout', { token }, {
+export const logout = async () => {
+  try {
+    await API.post('/logout', {}, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`
       }
-    })
-    localStorage.removeItem('accessToken')
-    return data
+    });
   } catch (error) {
     console.log(error);
-    throw error
+  } finally {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userInfo');
+    window.location.href = '/login';
   }
-}
+};
+
 
 
 

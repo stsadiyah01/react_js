@@ -1,24 +1,63 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { showBook } from "../../../_services/books";
 import { bookImageStorage } from "../../../_api";
+import { createTransactions } from "../../../_services/transactions";
 
 export default function ShowBook() {
   const { id } = useParams();
   const [book, setBook] = useState({});
+  const [quantity, setQuantity] = useState(1);
 
-    useEffect(()=> {
-      const fetchData = async () => {
-        const [bookData] = await Promise.all([
-          showBook(id)
-        ])
+  const navigate = useNavigate();
+  const accessToken = localStorage.getItem("accessToken");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [bookData] = await Promise.all([showBook(id)]);
         setBook(bookData);
+      } catch (err) {
+        console.error("Gagal fetch buku:", err);
       }
+    };
 
-      fetchData()
-    },[id]);
+    fetchData();
+  }, [id]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!accessToken) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const payload = {
+        book_id: Number(id),
+        quantity: Number(quantity),
+      };
+
+      console.log("Payload dikirim:", payload); // debug
+
+      await createTransactions(payload);
+      alert("Pembelian berhasil");
+    } catch (error) {
+      // Tangkap error dari Laravel
+      if (error.response) {
+        console.error("Status:", error.response.status);
+        console.error("Data:", error.response.data);
+        alert(
+          error.response.data.message ||
+            "Terjadi kesalahan saat melakukan transaksi"
+        );
+      } else {
+        console.error("Error:", error.message);
+        alert("Terjadi kesalahan jaringan");
+      }
+    }
+  };
 
   return (
     <>
@@ -29,7 +68,7 @@ export default function ShowBook() {
               <img
                 className="w-full dark:hidden"
                 src={`${bookImageStorage}/${book.cover_photo}`}
-                alt=""
+                alt={book.title}
               />
             </div>
 
@@ -40,7 +79,7 @@ export default function ShowBook() {
 
               <div className="mt-4 sm:items-center sm:gap-4 sm:flex">
                 <p className="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">
-                 Rp {book.price}
+                  Rp {book.price}
                 </p>
 
                 <div className="flex items-center gap-2 mt-2 sm:mt-0">
@@ -73,32 +112,35 @@ export default function ShowBook() {
               </div>
 
               <div className="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-                <Link
-                  to="#"
-                  title=""
-                  className="text-white mt-4 sm:mt-0 bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800 flex items-center justify-center"
-                  role="button"
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-6 sm:mt-8 space-y-4"
                 >
-                  <svg
-                    className="w-5 h-5 -ms-2 me-2"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6"
+                  <div>
+                    <label
+                      htmlFor="quantity"
+                      className="block text-sm font-medium text-gray-700 dark:text-white"
+                    >
+                      Jumlah
+                    </label>
+                    <input
+                      type="number"
+                      id="quantity"
+                      name="quantity"
+                      min={1}
+                      value={quantity}
+                      onChange={(e) => setQuantity(Number(e.target.value))}
+                      className="mt-1 block w-24 px-3 py-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
-                  </svg>
-                  Add to cart
-                </Link>
+                  </div>
 
+                  <button
+                    type="submit"
+                    className="text-white mt-4 sm:mt-0 bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-indigo-600 dark:hover:bg-indigo-700 focus:outline-none dark:focus:ring-indigo-800 flex items-center justify-center"
+                  >
+                    Beli Sekarang
+                  </button>
+                </form>
               </div>
 
               <hr className="my-6 md:my-8 border-gray-200 dark:border-gray-800" />

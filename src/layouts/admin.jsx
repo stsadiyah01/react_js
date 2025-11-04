@@ -6,7 +6,8 @@ export default function AdminLayout() {
 
   const navigate = useNavigate();
   const token = localStorage.getItem("accessToken");
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
+
   const decodedData = useDecodeToken(token);
 
   useEffect(()=> {

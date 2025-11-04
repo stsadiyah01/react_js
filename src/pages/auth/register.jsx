@@ -46,11 +46,16 @@ export default function Register() {
       }
   };
 
-  useEffect(()=> {
-   if(token && decodedData && decodedData.success){
-    navigate ("/admin")
-   }
-  },[token,decodedData, navigate])
+ useEffect(() => {
+  if (token && decodedData && decodedData.success) {
+    if (decodedData.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
+  }
+}, [token, decodedData, navigate]);
+
 
 
   return (

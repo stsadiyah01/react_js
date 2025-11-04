@@ -1,55 +1,36 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { deleteTransactions, getTransactions } from "../../../_services/transactions";
-import { getBooks } from "../../../_services/books";
-import { getUsers } from "../../../_services/users";
+import { Link, UNSAFE_getTurboStreamSingleFetchDataStrategy } from "react-router-dom";
+import { deleteUser, getUsers } from "../../../_services/users";
 
-
-export default function AdminTransactions() {
-  const [transactions, setTransactions] = useState([]);
-  const [books, setBooks] = useState([]);
+export default function AdminUsers() {
   const [users, setUsers] = useState([]);
-
   const [openDropdownId, setOpenDropdownId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const [transactionsData, booksData, usersData] = await Promise.all([
-        getTransactions(),
-        getBooks(),
-        getUsers(),
+      const [usersData] = await Promise.all([
+       getUsers()
       ]);
 
-      setTransactions(transactionsData);
-      setBooks(booksData);
       setUsers(usersData);
+      
     };
 
     fetchData();
   }, []);
 
-  const getUserName = (id) => {
-    const user = users.find((user) => user.id === id);
-    return user ? user.name : "Unknown User";
-  };
-
-  const getBookName = (id) => {
-    const book = books.find((book) => book.id === id);
-    return book ? book.title : "Unknown book";
-  };
-
   const toggleDropdown = (id) => {
     setOpenDropdownId(openDropdownId === id ? null : id);
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure to delete this book?");
-
-    if(confirmDelete){
-      await deleteTransactions(id);
-      setTransactions(transactions.filter((transaction)=> transaction.id !== id));
+   const handleDelete = async (id) => {
+      const confirmDelete = window.confirm("Are you sure to delete this user?");
+  
+      if(confirmDelete){
+        await deleteUser(id);
+        setUsers(users.filter((user)=> user.id !== id));
+      }
     }
-  }
 
   return (
     <>
@@ -93,16 +74,16 @@ export default function AdminTransactions() {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-4 py-3">
-                    Order Number
+                    Name
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Customer
+                    Email
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Buku
+                    Username
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Total Amount
+                    Role
                   </th>
                   <th scope="col" className="px-4 py-3">
                     <span className="sr-only">Actions</span>
@@ -110,27 +91,22 @@ export default function AdminTransactions() {
                 </tr>
               </thead>
               <tbody>
-                {transactions.length > 0 ? (
-                  transactions.map((transaction) => (
-                    <tr key={transaction.id} className="border-b dark:border-gray-700">
+                {users.length > 0 ? (
+                  users.map((user) => (
+                    <tr key={user.id} className="border-b dark:border-gray-700">
                       <th
                         scope="row"
                         className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        {transaction.order_number}
+                        {user.name}
                       </th>
-                      <td className="px-4 py-3">
-                        {getUserName(transaction.customer_id)}
-                      </td>
-                      <td className="px-4 py-3">
-                        {getBookName(transaction.book_id)}
-                      </td>
-
-                      <td className="px-4 py-3">{transaction.total_amount}</td>
+                      <td className="px-4 py-3">{user.email}</td>
+                      <td className="px-4 py-3">{user.username}</td>
+                      <td className="px-4 py-3">{user.role}</td>
                       <td className="px-4 py-3 flex items-center justify-end relative">
                         <button
-                          id={`dropdown-button-${transaction.id}`}
-                          onClick={() => toggleDropdown(transaction.id)}
+                          id={`dropdown-button-${user.id}`}
+                          onClick={() => toggleDropdown(user.id)}
                           className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
                           type="button"
                         >
@@ -144,7 +120,7 @@ export default function AdminTransactions() {
                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                           </svg>
                         </button>
-                        {openDropdownId === transaction.id && (
+                        {openDropdownId === user.id && (
                           <div
                             id="dropdown"
                             className="absolute right-0 mt-2 z-50 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
@@ -152,20 +128,20 @@ export default function AdminTransactions() {
                           >
                             <ul
                               className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                              aria-labelledby={`dropdown-button-${transaction.id}`}
+                              aria-labelledby={`dropdown-button-${user.id}`}
                             >
                               <li>
                                 <Link
-                                  to={`/admin/transaction/show/${transaction.id}`}
+                                  to={`/admin/users/edit/${user.id}`}
                                   className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                                 >
-                                  Detail
+                                  Edit
                                 </Link>
                               </li>
                             </ul>
                             <div className="py-1">
                               <button
-                                onClick={()=> handleDelete(transaction.id)}
+                                onClick={()=> handleDelete(user.id)}
                                 className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                               >
                                 Delete

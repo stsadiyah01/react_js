@@ -1,42 +1,79 @@
-export default function Testimonial() {
+export default function TestimoniSection() {
   return (
-    <section className="bg-white dark:bg-gray-900">
-      <div className="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-6">
-        <figure className="max-w-screen-md mx-auto">
-          <svg
-            className="h-12 mx-auto mb-3 text-gray-400 dark:text-gray-600"
-            viewBox="0 0 24 27"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z"
-              fill="currentColor"
-            />
-          </svg>
+    <section className="bg-white dark:bg-gray-900 py-12">
+      <div className="max-w-screen-xl mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+          Testimoni Pelanggan
+        </h2>
 
-          <blockquote>
-            <p className="text-2xl font-medium text-gray-900 dark:text-white">
-              "BookSales membuat saya mudah menemukan buku bekas favorit dengan harga terjangkau. Sangat membantu untuk mahasiswa seperti saya!"
-            </p>
-          </blockquote>
-
-          <figcaption className="flex items-center justify-center mt-6 space-x-3">
-            <img
-              className="w-10 h-10 rounded-full"
-              src="https://i.pravatar.cc/100?img=32"
-              alt="profile picture"
-            />
-            <div className="flex items-center divide-x-2 divide-gray-500 dark:divide-gray-700">
-              <div className="pr-3 font-medium text-gray-900 dark:text-white">
-                Siti Sa'diyah
-              </div>
-              <div className="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">
-                Mahasiswa
+        <div className="grid gap-8 md:grid-cols-3">
+          {/* Testimoni 1 */}
+          <div className="p-6 bg-gray-50 rounded-2xl shadow dark:bg-gray-800">
+            <div className="flex items-center space-x-4 mb-4">
+              <img
+                className="w-12 h-12 rounded-full"
+                src="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+                alt="Avatar"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Sarah Ann
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Mahasiswi
+                </p>
               </div>
             </div>
-          </figcaption>
-        </figure>
+            <p className="text-gray-700 dark:text-gray-300">
+              “Buku-bukunya lengkap banget dan pengirimannya cepat! Saya suka
+              pelayanan toko ini.”
+            </p>
+          </div>
+
+          {/* Testimoni 2 */}
+          <div className="p-6 bg-gray-50 rounded-2xl shadow dark:bg-gray-800">
+            <div className="flex items-center space-x-4 mb-4">
+              <img
+                className="w-12 h-12 rounded-full"
+                src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+                alt="Avatar"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Rizky Ahmad
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Karyawan Swasta
+                </p>
+              </div>
+            </div>
+            <p className="text-gray-700 dark:text-gray-300">
+              “Tampilan websitenya keren dan mudah digunakan. Bakal jadi
+              langganan deh!”
+            </p>
+          </div>
+
+          {/* Testimoni 3 */}
+          <div className="p-6 bg-gray-50 rounded-2xl shadow dark:bg-gray-800">
+            <div className="flex items-center space-x-4 mb-4">
+              <img
+                className="w-12 h-12 rounded-full"
+                src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+                alt="Avatar"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Aulia Fadilah
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Guru</p>
+              </div>
+            </div>
+            <p className="text-gray-700 dark:text-gray-300">
+              “Harga bukunya terjangkau dan kualitasnya bagus banget.
+              Recommended!”
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );
